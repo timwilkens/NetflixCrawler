@@ -83,10 +83,20 @@ sub get_movie_list_links {
                                          );
   my @links;
   for my $link (@movie_links) {
-    push @links, NetflixLink->new(link => $link->url_abs, type => 'list');
+    $link = $link->url_abs;
+    push @links, NetflixLink->new(link => $link, type => 'list');
   }
 
   return @links;
+}
+
+sub get_all_links {
+  my ($self, $link) = @_;
+
+  my @detail_links = $self->get_movie_detail_links($link->link);
+  my @list_links = $self->get_movie_list_links($link->link);
+
+  return (@detail_links, @list_links);
 }
 
 1;
