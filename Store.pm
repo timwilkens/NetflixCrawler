@@ -71,9 +71,19 @@ sub netflix_rating_above {
   my ($self, $rating) = @_;
 
   my $sql = "SELECT * from movies WHERE netflix_rating >= ?";
-  return $self->_make_query(sql => $sql, 
+  return $self->_make_query(sql   => $sql, 
                             value => $rating
                            );
+}
+
+sub netflix_genre_contains {
+  my ($self, $query) = @_;
+
+  my $sql = "SELECT * from movies WHERE netflix_genre LIKE ?";
+  return $self->_make_query(sql   => $sql, 
+                            value => '%'.$query.'%'
+                           );
+
 }
 
 sub _make_query {
