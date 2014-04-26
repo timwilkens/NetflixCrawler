@@ -76,13 +76,8 @@ sub search_netflix_rating {
 
   my @movies;
   while (my $row = $sth->fetchrow_hashref) {
-    my $movie = Movie->new;
+    my $movie = Movie->new();
     for my $field ( qw(title netflix_rating netflix_id plot genre url imdb_rating year imdb_id) ) {
-
-      if ($field eq 'plot' || $field eq 'title') {
-        $row->{$field} =~ s/\\//;
-      }
-
       my $method = "set_" . $field;
       $movie->$method($row->{$field});
     }
