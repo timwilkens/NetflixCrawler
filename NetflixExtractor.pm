@@ -16,7 +16,9 @@ sub make_movie {
   my $content = $args{content};
 
   my ($netflix_id) = $link =~ /WiMovie\/(\d+)/;
-  my $movie = Movie->new(netflix_id => $netflix_id);
+  my $movie = Movie->new(netflix_id => $netflix_id,
+                         link       => $link
+                        );
 
   my $title = _extract_title($content);
   return unless $title;
@@ -39,6 +41,8 @@ sub _extract_title {
   if ($content =~ /<h1\s*class="title"\s*>\s*(.*?)\s*<\/h1>/s) {
     $title = $1;
     $title =~ s/\\//;
+  } else {
+    die "$content";
   }
   return $title;
 }
@@ -47,8 +51,10 @@ sub _extract_year {
   my $content = shift;
 
   my $year;
-  if ($content =~ /<\/h1>\s*<\/div>\s*<span\s+class="year"\s*>\s*(\d{4})/s) {
+  if ($content =~ /<\/h1>\s*(?:<span\s+class="origTitle">.*?<\/span>)?\s*<\/div>\s*<span\s+class="year"\s*>\s*(\d{4})/s) {
     $year = $1;
+  } else {
+    die "$content - YEAR\n";
   }
   return $year;
 }

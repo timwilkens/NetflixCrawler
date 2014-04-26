@@ -5,7 +5,8 @@ use warnings;
 
 use base qw(WWW::Mechanize);
 
-use JSON qw(decode_json);
+use JSON;
+use Encode;
 
 sub new {
   my ($class, %args) = @_;
@@ -23,7 +24,9 @@ sub add_imdb_data {
   my $url = "http://www.omdbapi.com/?t=$title&y=$year";
   $self->get($url);
 
-  my $data = decode_json($self->content);
+  my $data_bytes = encode('UTF-8', $self->content);
+  my $data = JSON->new->utf8->decode($data_bytes);
+
   return if ($data->{Error});
 
   $movie->set_imdb_rating($data->{imdbRating});
