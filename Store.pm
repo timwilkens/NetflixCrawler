@@ -71,8 +71,18 @@ sub netflix_rating_above {
   my ($self, $rating) = @_;
 
   my $sql = "SELECT * from movies WHERE netflix_rating >= ?";
+  return $self->_make_query(sql => $sql, 
+                            value => $rating
+                           );
+}
+
+sub _make_query {
+  my ($self, %args) = @_;
+  my $sql = $args{sql};
+  my $value = $args{value};
+
   my $sth = $self->{dbh}->prepare($sql);
-  $sth->execute($rating)
+  $sth->execute($value)
     or die $self->{dbh}->errstr;
 
   my @movies;
