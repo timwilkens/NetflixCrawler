@@ -31,6 +31,9 @@ sub make_movie {
   my $rating = _extract_rating($content);
   $movie->set_netflix_rating($rating);
 
+  my $genre = _extract_genre($content);
+  $movie->set_netflix_genre($genre);
+
   return $movie;
 }
 
@@ -65,6 +68,26 @@ sub _extract_rating {
     }
   }
   return $rating;
+}
+
+sub _extract_genre {
+  my $content = shift;
+
+  my @genres;
+  if ($content =~ /<dt\s*>Genres\s*<\/dt>(.*?)<\/dl>/) {
+    $content = $1;
+    @genres = ($content =~ /<dd>(.*?)<\/dd>/g);
+  }
+  return unless @genres;
+
+  my $genre;
+  for my $genre_string (@genres) {
+    $genre_string =~ s/<\/?a.*?>//g;
+    $genre_string =~ s/$/, /;
+    $genre .= $genre_string;
+  }
+  $genre =~ s/,\s*$//;
+  return $genre;
 }
 
 1;

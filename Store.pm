@@ -35,7 +35,8 @@ sub new {
     netflix_rating FLOAT,
     year INTEGER,
     netflix_id INTEGER UNIQUE,
-    imdb_id CHAR)");
+    imdb_id CHAR,
+    netflix_genre CHAR)");
   }
   
   $self{dbh} = $dbh;
@@ -48,10 +49,10 @@ sub store_movie {
   return if ($self->movie_exists($movie));
 
   my $sql = 'INSERT INTO movies (title, netflix_rating, netflix_id, plot, 
-                                genre, url, imdb_rating, year, imdb_id
-                                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                                genre, url, imdb_rating, year, imdb_id, netflix_genre
+                                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
   $self->{dbh}->do($sql, undef, $movie->title, $movie->netflix_rating, $movie->netflix_id, $movie->plot,
-                   $movie->genre, $movie->url, $movie->imdb_rating, $movie->year, $movie->imdb_id);
+                   $movie->genre, $movie->url, $movie->imdb_rating, $movie->year, $movie->imdb_id, $movie->netflix_genre);
 }
 
 sub close {
@@ -77,7 +78,7 @@ sub search_netflix_rating {
   my @movies;
   while (my $row = $sth->fetchrow_hashref) {
     my $movie = Movie->new();
-    for my $field ( qw(title netflix_rating netflix_id plot genre url imdb_rating year imdb_id) ) {
+    for my $field ( qw(title netflix_rating netflix_id plot genre url imdb_rating year imdb_id netflix_genre) ) {
       my $method = "set_" . $field;
       $movie->$method($row->{$field});
     }
