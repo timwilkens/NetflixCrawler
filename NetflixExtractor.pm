@@ -17,7 +17,7 @@ sub make_movie {
 
   my ($netflix_id) = $link =~ /WiMovie\/(\d+)/;
   my $movie = Movie->new(netflix_id => $netflix_id,
-                         link       => $link
+                         url        => $link
                         );
 
   my $title = _extract_title($content);

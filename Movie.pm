@@ -9,7 +9,7 @@ my %NEW_PARAMS = (title          => undef,
                   year           => undef,
                   imdb_rating    => undef,
                   imdb_id        => undef,
-                  link           => undef,
+                  url            => undef,
                   plot           => undef,
                   genre          => undef,
                  );

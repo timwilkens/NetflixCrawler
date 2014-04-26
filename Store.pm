@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use DBI;
+use Data::Dumper;
 
 sub new {
   my ($class, $file) = @_;
@@ -63,6 +64,18 @@ sub movie_exists {
   return $self->{dbh}->selectrow_array('SELECT COUNT(*) FROM movies WHERE netflix_id = ?',
                                         undef, $movie->netflix_id
                                       );
+}
+
+sub search_netflix_rating {
+  my ($self, $rating) = @_;
+
+  my $sql = "SELECT * from movies WHERE netflix_rating >= ?";
+  my $sth = $self->{dbh}->prepare($sql);
+  $sth->execute($rating);
+
+  while (my $row = $sth->fetchrow_hashref) {
+    print Dumper($row);
+  }
 }
 
 1;
