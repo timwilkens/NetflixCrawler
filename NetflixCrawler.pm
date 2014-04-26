@@ -40,8 +40,13 @@ sub get_movie_links_by_genre {
   die "Must provide genre 'action', 'comedy', or 'thriller'" unless ($genre && $GENRE_IDS{$genre});
 
   my $url = 'http://www.netflix.com/WiGenre?agid=' . $GENRE_IDS{$genre} . '&orderBy=rt';
-  $self->get($url);
+  $self->get_movie_detail_links;
+}
 
+sub get_movie_detail_links {
+  my ($self, $url) = @_;
+
+  $self->get($url);
   my @movie_links = $self->find_all_links(tag       => 'a',
                                           url_regex => qr/WiPlayer\?movieid=/
                                          );
@@ -56,8 +61,9 @@ sub _transform_movie_detail_links {
   # Go from play link to info link.
   for my $link (@movie_links) {
     $link = $link->url_abs;
-    $link =~ s/&trkid=\d+$//;
+    $link =~ s/&trkid=\d+.+$//;
     $link =~ s/Player\?movieid=/Movie\//;
+    print "\t$link\n";
     push @links, $link;
   }
   return @links;
