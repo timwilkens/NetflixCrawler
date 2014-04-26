@@ -77,15 +77,22 @@ sub netflix_rating_above {
 
   my @movies;
   while (my $row = $sth->fetchrow_hashref) {
-    my $movie = Movie->new();
-    for my $field ( qw(title netflix_rating netflix_id plot genre url imdb_rating year imdb_id netflix_genre) ) {
-      my $method = "set_" . $field;
-      $movie->$method($row->{$field});
-    }
-    push @movies, $movie;
+    push @movies, $self->_movie_from_data($row);
   }
   return @movies;
 }
+
+sub _movie_from_data {
+  my ($self, $data) = @_;
+
+  my $movie = Movie->new();
+  for my $field ( qw(title netflix_rating netflix_id plot genre url imdb_rating year imdb_id netflix_genre) ) {
+    my $method = "set_" . $field;
+    $movie->$method($data->{$field});
+  }
+  return $movie;
+}
+
 
 1;
 
