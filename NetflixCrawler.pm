@@ -5,6 +5,8 @@ use warnings;
 
 use base qw(WWW::Mechanize);
 
+my $NETFLIX_HOME = 'http://www.netflix.com/WiHome';
+
 sub new {
   my ($class, %args) = @_;
 
@@ -26,7 +28,7 @@ sub login {
   $self->click;
 
   # Go to the homepage.
-  $self->get('http://www.netflix.com/WiHome');
+  $self->get($NETFLIX_HOME);
 }
 
 my %GENRE_IDS = (action   => 1365,
@@ -63,9 +65,25 @@ sub _transform_movie_detail_links {
     $link = $link->url_abs;
     $link =~ s/&trkid=\d+.+$//;
     $link =~ s/Player\?movieid=/Movie\//;
-    print "\t$link\n";
     push @links, $link;
   }
+  return @links;
+}
+
+sub get_movie_list_links {
+  my ($self, $url) = @_;
+
+  $url //= $NETFLIX_HOME;
+
+  $self->get($url);
+  my @movie_links = $self->find_all_links(tag       => 'a',
+                                          url_regex => qr/WiAltGenre\?agid=/
+                                         );
+  my @links;
+  for my $link (@movie_links) {
+    push @links, $link->url_abs;
+  }
+
   return @links;
 }
 
