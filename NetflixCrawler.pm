@@ -5,7 +5,7 @@ use warnings;
 
 use base qw(WWW::Mechanize);
 
-use NetflixLink;
+use NetflixURL;
 
 my $NETFLIX_HOME = 'http://www.netflix.com/WiHome';
 
@@ -67,7 +67,7 @@ sub _transform_movie_detail_links {
     $link = $link->url_abs;
     $link =~ s/&trkid=\d+.+$//;
     $link =~ s/Player\?movieid=/Movie\//;
-    push @links, NetflixLink->new(link => $link, type => 'detail');
+    push @links, (NetflixURL->new(url => $link, type => 'detail'));
   }
   return @links;
 }
@@ -84,7 +84,7 @@ sub get_movie_list_links {
   my @links;
   for my $link (@movie_links) {
     $link = $link->url_abs;
-    push @links, NetflixLink->new(link => $link, type => 'list');
+    push @links, (NetflixURL->new(url => $link, type => 'list'));
   }
 
   return @links;
@@ -93,8 +93,8 @@ sub get_movie_list_links {
 sub get_all_links {
   my ($self, $link) = @_;
 
-  my @detail_links = $self->get_movie_detail_links($link->link);
-  my @list_links = $self->get_movie_list_links($link->link);
+  my @detail_links = $self->get_movie_detail_links($link);
+  my @list_links = $self->get_movie_list_links($link);
 
   return (@detail_links, @list_links);
 }

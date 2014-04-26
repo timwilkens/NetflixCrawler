@@ -36,7 +36,7 @@ sub get_list_work {
 
 sub add_work {
   my ($self, $link) = @_;
-  return if ($self->{seen}{$link->link});
+  return if ($self->{seen}{$link->url});
 
   if ($link->type eq 'list') {
     $self->_add_list_work($link);
@@ -44,7 +44,7 @@ sub add_work {
     $self->_add_detail_work($link);
   }
 
-  $self->{seen}{$link->link} = 1;
+  $self->{seen}{$link->url} = 1;
 }
 
 sub _add_detail_work { push @{$_[0]->{detail_work}}, $_[1] }

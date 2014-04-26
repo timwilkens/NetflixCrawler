@@ -1,9 +1,9 @@
-package NetflixLink;
+package NetflixURL;
 
 use strict;
 use warnings;
 
-my %NEW_PARAMS = (link => undef,
+my %NEW_PARAMS = (url => undef,
                   type => undef,
                  );
 
@@ -26,10 +26,10 @@ sub new {
   return $self;
 }
 
-sub link { shift->{link} }
+sub url { shift->{url} }
 sub type { shift->{type} }
 
-sub set_link { $_[0]->{link} = $_[1] }
+sub set_url { $_[0]->{url} = $_[1] }
 sub set_type { $_[0]->{type} = $_[1] }
 
 1;
