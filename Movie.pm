@@ -3,10 +3,12 @@ package Movie;
 use strict;
 use warnings;
 
-my %NEW_PARAMS = (title      => undef,
-                  rating     => undef,
-                  netflix_id => undef,
-                  year       => undef,
+my %NEW_PARAMS = (title          => undef,
+                  netflix_rating => undef,
+                  netflix_id     => undef,
+                  year           => undef,
+                  imdb_rating    => undef,
+                  imdb_id        => undef,
                  );
 
 sub new {
@@ -22,14 +24,18 @@ sub new {
 }
 
 sub title { shift->{title} }
-sub rating { shift->{rating} }
+sub netflix_rating { shift->{netflix_rating} }
 sub netflix_id { shift->{netflix_id} }
 sub year { shift->{year} }
+sub imdb_rating { shift->{imdb_rating} }
+sub imdb_id { shift->{imdb_id} }
 
 sub set_title { $_[0]->{title} = $_[1] }
-sub set_rating { $_[0]->{rating} = $_[1] }
+sub set_netflix_rating { $_[0]->{netflix_rating} = $_[1] }
 sub set_netflix_id { $_[0]->{netflix_id} = $_[1] }
 sub set_year { $_[0]->{year} = $_[1] }
+sub set_imdb_rating { $_[0]->{imdb_rating} = $_[1] }
+sub set_imdb_id { $_[0]->{imdb_id} = $_[1] }
 
 1;
 

@@ -68,7 +68,9 @@ sub make_movie {
   my $content = $self->content;
 
   if ($content =~ /<h1\s*class="title"\s*>\s*(.*?)\s*<\/h1>/s) {
-    $movie->set_title($1);
+    my $title = $1;
+    $title =~ s/\\//;
+    $movie->set_title($title);
   }
 
   if ($content =~ /<\/h1>\s*<\/div>\s*<span\s+class="year"\s*>\s*(\d{4})/) {
@@ -78,11 +80,11 @@ sub make_movie {
   if ($content =~ /<div\s+class="starbar\s+starbar-avg\s+stbrWrapStc\s+clearfix">\s*(.*?)\s*<\/div>/s) {
     $content = $1;
     if ($content =~ /<\/p>\s*<meta\s+content="\d+"\s*\/>\s*<span\s+class="rating"\s*>\s*(\d+\.?\d*)\s+stars/s) {
-      $movie->set_rating($1);
+      $movie->set_netflix_rating($1);
     }
   }
 
-  $movie;
+  return $movie;
 }
 
 1;
