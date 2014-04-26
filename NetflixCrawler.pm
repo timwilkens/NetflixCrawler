@@ -58,34 +58,5 @@ sub get_movie_links_by_genre {
   @links;
 }
 
-sub make_movie {
-  my ($self, $link) = @_;
-  $self->get($link);
-
-  my ($netflix_id) = $link =~ /WiMovie\/(\d+)/;
-
-  my $movie = Movie->new(netflix_id => $netflix_id);
-  my $content = $self->content;
-
-  if ($content =~ /<h1\s*class="title"\s*>\s*(.*?)\s*<\/h1>/s) {
-    my $title = $1;
-    $title =~ s/\\//;
-    $movie->set_title($title);
-  }
-
-  if ($content =~ /<\/h1>\s*<\/div>\s*<span\s+class="year"\s*>\s*(\d{4})/) {
-    $movie->set_year($1);   
-  }
-
-  if ($content =~ /<div\s+class="starbar\s+starbar-avg\s+stbrWrapStc\s+clearfix">\s*(.*?)\s*<\/div>/s) {
-    $content = $1;
-    if ($content =~ /<\/p>\s*<meta\s+content="\d+"\s*\/>\s*<span\s+class="rating"\s*>\s*(\d+\.?\d*)\s+stars/s) {
-      $movie->set_netflix_rating($1);
-    }
-  }
-
-  return $movie;
-}
-
 1;
 
