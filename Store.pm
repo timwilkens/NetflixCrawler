@@ -27,7 +27,7 @@ sub new {
   if ($make_flag) {
     $dbh->do("CREATE TABLE movies (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title CHAR UNIQUE NOT NULL,
+    title CHAR NOT NULL,
     plot CHAR,
     genre CHAR,
     url CHAR,
