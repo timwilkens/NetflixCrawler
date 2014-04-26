@@ -99,7 +99,16 @@ sub _make_query {
   while (my $row = $sth->fetchrow_hashref) {
     push @movies, $self->_movie_from_data($row);
   }
-  return @movies;
+  return _sort_movies(@movies);
+}
+
+sub _sort_movies {
+  my ($self, @movies) = @_;
+  
+  # Sort by netflix rating first, then imdb rating on ties.
+  return map { $_->[0] }
+         sort { $b->[1] <=> $a->[1] || $b->[2] <=> $a->[2] }
+         map { [$_, $_->netflix_rating, $_->imdb_rating] } @movies;
 }
 
 sub _movie_from_data {
