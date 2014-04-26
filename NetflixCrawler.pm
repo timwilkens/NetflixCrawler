@@ -50,7 +50,7 @@ sub get_movie_links_by_genre {
 sub get_movie_detail_links {
   my ($self, $url) = @_;
 
-  $self->get($url);
+  $self->get($url) unless ($self->uri eq $url);
   my @movie_links = $self->find_all_links(tag       => 'a',
                                           url_regex => qr/WiPlayer\?movieid=/
                                          );
@@ -77,7 +77,7 @@ sub get_movie_list_links {
 
   $url //= $NETFLIX_HOME;
 
-  $self->get($url);
+  $self->get($url) unless ($self->uri eq $url);
   my @movie_links = $self->find_all_links(tag       => 'a',
                                           url_regex => qr/WiAltGenre\?agid=/
                                          );
