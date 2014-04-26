@@ -46,8 +46,13 @@ sub get_movie_links_by_genre {
                                           url_regex => qr/WiPlayer\?movieid=/
                                          );
 
-  my @links;
+  return $self->_transform_movie_detail_links(@movie_links);
+}
 
+sub _transform_movie_detail_links {
+ my ($self, @movie_links) = @_;
+
+  my @links;
   # Go from play link to info link.
   for my $link (@movie_links) {
     $link = $link->url_abs;
@@ -55,7 +60,7 @@ sub get_movie_links_by_genre {
     $link =~ s/Player\?movieid=/Movie\//;
     push @links, $link;
   }
-  @links;
+  return @links;
 }
 
 1;
