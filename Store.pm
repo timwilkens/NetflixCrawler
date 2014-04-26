@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use DBI;
-use Data::Dumper;
+use Movie;
 
 sub new {
   my ($class, $file) = @_;
@@ -35,7 +35,7 @@ sub new {
     netflix_rating FLOAT,
     year INTEGER,
     netflix_id INTEGER UNIQUE,
-    imdb_id INTEGER)");
+    imdb_id CHAR)");
   }
   
   $self{dbh} = $dbh;
@@ -71,11 +71,24 @@ sub search_netflix_rating {
 
   my $sql = "SELECT * from movies WHERE netflix_rating >= ?";
   my $sth = $self->{dbh}->prepare($sql);
-  $sth->execute($rating);
+  $sth->execute($rating)
+    or die $self->{dbh}->errstr;
 
+  my @movies;
   while (my $row = $sth->fetchrow_hashref) {
-    print Dumper($row);
+    my $movie = Movie->new;
+    for my $field ( qw(title netflix_rating netflix_id plot genre url imdb_rating year imdb_id) ) {
+
+      if ($field eq 'plot' || $field eq 'title') {
+        $row->{$field} =~ s/\\//;
+      }
+
+      my $method = "set_" . $field;
+      $movie->$method($row->{$field});
+    }
+    push @movies, $movie;
   }
+  return @movies;
 }
 
 1;

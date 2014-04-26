@@ -16,14 +16,14 @@ my %NEW_PARAMS = (title          => undef,
 
 sub new {
   my ($class, %args) = @_;
-  my $self = bless \%NEW_PARAMS, $class;
+  my $self = bless {%NEW_PARAMS}, $class;
 
   while (my ($param, $value) = each(%args)) {
     die "'$param' not a valid argument to $class constructor"
       unless (exists $NEW_PARAMS{$param});
     $self->{$param} = $value;
   }
-  $self;
+  return $self;
 }
 
 sub title { shift->{title} }
