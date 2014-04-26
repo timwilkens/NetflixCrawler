@@ -20,7 +20,7 @@ sub new {
     die "'$param' not a valid argument to $class constructor"
       unless (exists $NEW_PARAMS{$param});
     die "Invalid type '$value'" 
-      unless (($param ne $type) || !$VALID_TYPES{$value});
+      unless (($param ne 'type') || $VALID_TYPES{$value});
     $self->{$param} = $value;
   }
   return $self;
