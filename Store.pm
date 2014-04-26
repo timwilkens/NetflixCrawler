@@ -67,7 +67,7 @@ sub movie_exists {
                                       );
 }
 
-sub search_netflix_rating {
+sub netflix_rating_above {
   my ($self, $rating) = @_;
 
   my $sql = "SELECT * from movies WHERE netflix_rating >= ?";
