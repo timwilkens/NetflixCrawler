@@ -13,6 +13,7 @@ my %NEW_PARAMS = (title          => undef,
                   plot           => undef,
                   genre          => undef,
                   netflix_genre  => undef,
+                  rt_rating      => undef,
                  );
 
 sub new {
@@ -37,6 +38,7 @@ sub url { shift->{url} }
 sub plot { shift->{plot} }
 sub genre { shift->{genre} }
 sub netflix_genre { shift->{netflix_genre} }
+sub rt_rating { shift->{rt_rating} }
 
 sub set_title { $_[0]->{title} = $_[1] }
 sub set_netflix_rating { $_[0]->{netflix_rating} = $_[1] }
@@ -48,6 +50,7 @@ sub set_url { $_[0]->{url} = $_[1] }
 sub set_plot { $_[0]->{plot} = $_[1] }
 sub set_genre { $_[0]->{genre} = $_[1] }
 sub set_netflix_genre { $_[0]->{netflix_genre} = $_[1] }
+sub set_rt_rating { $_[0]->{rt_rating} = $_[1] }
 
 1;
 

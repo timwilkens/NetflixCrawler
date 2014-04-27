@@ -8,6 +8,7 @@ use NetflixExtractor;
 use IMDBData;
 use Store;
 use Boss;
+use RTData;
 
 sub new {
   my ($class, %args) = @_;
@@ -21,6 +22,7 @@ sub new {
   $self{imdb} = IMDBData->new;
   $self{netflix} = NetflixCrawler->new;
   $self{extractor} = NetflixExtractor->new;
+  $self{rt} = RTData->new;
 
   bless \%self, $class;
 }
@@ -49,6 +51,7 @@ sub run {
                                                 );
       next unless $movie;
       $self->{imdb}->add_imdb_data($movie);
+      $self->{rt}->add_tomato_rating($movie);
       $self->{storage}->store_movie($movie);
     }
   }
