@@ -25,8 +25,9 @@ sub add_imdb_data {
   $self->get($url);
 
   my $data_bytes = encode('UTF-8', $self->content);
-  my $data = JSON->new->utf8->decode($data_bytes);
+  my $data = eval { JSON->new->utf8->decode($data_bytes) };
 
+  return if ($@);
   return if ($data->{Error});
 
   $movie->set_imdb_rating($data->{imdbRating});
