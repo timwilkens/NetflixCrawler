@@ -31,7 +31,6 @@ sub add_imdb_data {
 
   $movie->set_imdb_rating($data->{imdbRating});
   $movie->set_imdb_id($data->{imdbID});
-  $movie->set_plot($data->{Plot});
   $movie->set_genre($data->{Genre});
 }
 

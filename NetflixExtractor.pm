@@ -34,6 +34,9 @@ sub make_movie {
   my $genre = _extract_genre($content);
   $movie->set_netflix_genre($genre);
 
+  my $plot = _extract_plot($content);
+  $movie->set_plot($plot);
+
   return $movie;
 }
 
@@ -88,6 +91,14 @@ sub _extract_genre {
   }
   $genre =~ s/,\s*$//;
   return $genre;
+}
+
+sub _extract_plot {
+  my $content = shift;
+
+  if ($content =~ /<p\s+class="synopsis"\s*>\s*(.*?)\s*<\/p>/) {
+    return $1;
+  }
 }
 
 1;
