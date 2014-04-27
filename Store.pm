@@ -27,10 +27,10 @@ sub new {
   if ($make_flag) {
     $dbh->do("CREATE TABLE movies (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title CHAR NOT NULL,
+    title CHAR UNIQUE NOT NULL,
     plot CHAR,
     genre CHAR,
-    url CHAR,
+    url UNIQUE CHAR,
     imdb_rating FLOAT,
     netflix_rating FLOAT,
     year INTEGER,
@@ -46,7 +46,8 @@ sub new {
 sub store_movie {
   my ($self, $movie) = @_;
 
-  return if ($self->movie_exists($movie));
+  return if ($self->movie_id_exists($movie->id));
+  return if ($self->movie_title_exists($movie->title));
 
   my $sql = 'INSERT INTO movies (title, netflix_rating, netflix_id, plot, 
                                 genre, url, imdb_rating, year, imdb_id, netflix_genre
@@ -60,10 +61,24 @@ sub close {
   $self->{dbh}->disconnect;
 }
 
-sub movie_exists {
-  my ($self, $movie) = @_;
+sub movie_id_exists {
+  my ($self, $netflix_id) = @_;
   return $self->{dbh}->selectrow_array('SELECT COUNT(*) FROM movies WHERE netflix_id = ?',
-                                        undef, $movie->netflix_id
+                                        undef, $netflix_id
+                                      );
+}
+
+sub movie_title_exists {
+  my ($self, $title) = @_;
+  return $self->{dbh}->selectrow_array('SELECT COUNT(*) FROM movies WHERE title = ?',
+                                        undef, $title
+                                      );
+}
+
+sub movie_url_exists {
+  my ($self, $url) = @_;
+  return $self->{dbh}->selectrow_array('SELECT COUNT(*) FROM movies WHERE url = ?',
+                                        undef, $url
                                       );
 }
 
