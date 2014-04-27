@@ -52,5 +52,10 @@ sub set_genre { $_[0]->{genre} = $_[1] }
 sub set_netflix_genre { $_[0]->{netflix_genre} = $_[1] }
 sub set_rt_rating { $_[0]->{rt_rating} = $_[1] }
 
+sub is_tv_show {
+  my $self = shift;
+  return ($self->netflix_genre =~ /\sTV|TV\s/) ? 1 : 0;
+}
+
 1;
 

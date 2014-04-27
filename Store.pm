@@ -124,10 +124,10 @@ sub _make_query {
 sub _sort_movies {
   my ($self, @movies) = @_;
   
-  # Sort by netflix rating first, then imdb rating on ties.
+  # Sort by netflix rating first, then rt, then imdb.
   return map { $_->[0] }
-         sort { $b->[1] <=> $a->[1] || $b->[2] <=> $a->[2] }
-         map { [$_, $_->netflix_rating, $_->imdb_rating] } @movies;
+         sort { $b->[1] <=> $a->[1] || $b->[2] <=> $a->[2] || $b->[3] <=> $a->[3] }
+         map { [$_, $_->netflix_rating, $_->rt_rating, $_->imdb_rating] } @movies;
 }
 
 sub _movie_from_data {
