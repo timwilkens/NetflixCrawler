@@ -30,7 +30,7 @@ sub new {
     title CHAR UNIQUE NOT NULL,
     plot CHAR,
     genre CHAR,
-    url UNIQUE CHAR,
+    url CHAR UNIQUE,
     imdb_rating FLOAT,
     netflix_rating FLOAT,
     year INTEGER,
@@ -46,8 +46,9 @@ sub new {
 sub store_movie {
   my ($self, $movie) = @_;
 
-  return if ($self->movie_id_exists($movie->id));
+  return if ($self->movie_id_exists($movie->netflix_id));
   return if ($self->movie_title_exists($movie->title));
+  return if ($self->movie_url_exists($movie->url));
 
   my $sql = 'INSERT INTO movies (title, netflix_rating, netflix_id, plot, 
                                 genre, url, imdb_rating, year, imdb_id, netflix_genre
@@ -94,7 +95,7 @@ sub netflix_rating_above {
 sub netflix_genre_contains {
   my ($self, $query) = @_;
 
-  my $sql = "SELECT * from movies WHERE netflix_genre LIKE ?";
+  my $sql = "SELECT * from movies WHERE netflix_genre LIKE ? LIMIT 10";
   return $self->_make_query(sql   => $sql, 
                             value => '%'.$query.'%'
                            );
