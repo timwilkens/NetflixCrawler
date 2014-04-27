@@ -34,13 +34,13 @@ sub run {
 
   # Start from genre pages on Homepage.
   my @list_links = $self->{netflix}->get_movie_list_links;
-  $self->{boss}->add_work($_) for (@list_links);
+  $self->give_list_to_boss(@list_links);
 
   while (my $link = $self->{boss}->get_work) {
     print "Getting: " . $link->url . "\n";
     print $self->{boss}->detail_work_left . " detail links left\n";
     my @to_add = $self->{netflix}->get_all_links($link->url);
-    $self->{boss}->add_work($_) for (@to_add);
+    $self->give_list_to_boss(@to_add);
 
     if ($link->type eq 'detail') {
       $self->{netflix}->get($link->url);
@@ -52,6 +52,15 @@ sub run {
       $self->{storage}->store_movie($movie);
     }
   }
+}
+
+sub give_list_to_boss {
+  my ($self, @links) = @_;
+
+  for my $link (@links) {
+    $self->{boss}->add_work($link) unless $self->{storage}->movie_url_exists($link);
+  }
+
 }
 
 1;
