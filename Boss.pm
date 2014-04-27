@@ -19,6 +19,8 @@ sub get_work {
 
   if (!$self->detail_work_left && $self->list_work_left) {
     return $self->get_list_work;
+  } elsif (((keys %{$self->{seen}}) % 10) == 0) {
+    return $self->get_list_work;
   } else {
     return $self->get_detail_work;
   }
