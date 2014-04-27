@@ -95,7 +95,7 @@ sub netflix_rating_above {
 sub netflix_genre_contains {
   my ($self, $query) = @_;
 
-  my $sql = "SELECT * from movies WHERE netflix_genre LIKE ? LIMIT 10";
+  my $sql = "SELECT * from movies WHERE netflix_genre LIKE ?";
   return $self->_make_query(sql   => $sql, 
                             value => '%'.$query.'%'
                            );
