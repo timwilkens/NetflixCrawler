@@ -5,6 +5,7 @@ use warnings;
 
 use NetflixCrawler;
 use NetflixExtractor;
+use NetflixURL;
 use IMDBData;
 use Store;
 use Boss;
@@ -33,6 +34,8 @@ sub run {
   $self->{netflix}->login(email    => $self->{email},
                           password => $self->{password}
                          );
+
+  $self->{boss}->add_work(NetflixURL->new(url => 'http://www.netflix.com/WiHome', type => 'list'));
 
   # Start from genre pages on Homepage.
   my @list_links = $self->{netflix}->get_movie_list_links;
