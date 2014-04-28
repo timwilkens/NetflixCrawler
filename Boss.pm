@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use List::Util qw(shuffle);
-use NetflixURL;
 
 sub new {
   my $class = shift;
@@ -48,7 +47,7 @@ sub add_work {
     @{$self->{list_work}} = shuffle(@{$self->{list_work}});
   } else {
     $self->_add_detail_work($link);
-    @{$self->{detail_work}} = @{$self->{detail_work}};
+    @{$self->{detail_work}} = shuffle(@{$self->{detail_work}});
   }
 
   $self->{seen}{$link->url} = 1;
