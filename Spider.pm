@@ -30,6 +30,7 @@ sub new {
 
 sub run {
   my $self = shift;
+  my $added = 0;
 
   $self->{netflix}->login(email    => $self->{email},
                           password => $self->{password}
@@ -42,8 +43,9 @@ sub run {
   $self->give_list_to_boss(@list_links);
 
   while (my $link = $self->{boss}->get_work) {
+    next if $self->{storage}->movie_url_exists($link->url);
     print "Getting: " . $link->url . "\n";
-    print $self->{boss}->detail_work_left . " detail links left\n";
+    print "Added: $added\t" . $self->{boss}->detail_work_left . " detail links left\n";
     my @to_add = $self->{netflix}->get_all_links($link->url);
     $self->give_list_to_boss(@to_add);
 
@@ -60,6 +62,7 @@ sub run {
       $self->{imdb}->add_imdb_data($movie);
       $self->{rt}->add_tomato_rating($movie);
       $self->{storage}->store_movie($movie);
+      $added++;
     }
   }
 }
