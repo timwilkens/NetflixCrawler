@@ -126,7 +126,7 @@ sub _sort_movies {
   
   # Sort by netflix rating first, then rt, then imdb.
   return map { $_->[0] }
-         sort { $b->[1] <=> $a->[1] || $b->[2] <=> $a->[2] || $b->[3] <=> $a->[3] }
+         sort { $b->[1] <=> $a->[1] || $b->[3] <=> $a->[3] || $b->[2] <=> $a->[2] }
          map { [$_, $_->netflix_rating, $_->rt_rating, $_->imdb_rating] } @movies;
 }
 
