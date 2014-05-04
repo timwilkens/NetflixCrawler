@@ -96,11 +96,12 @@ sub netflix_rating_above {
 }
 
 sub netflix_genre_contains {
-  my ($self, $query) = @_;
+  my ($self, $query, $sort) = @_;
 
   my $sql = "SELECT * from movies WHERE netflix_genre LIKE ?";
   return $self->_make_query(sql   => $sql, 
-                            value => '%'.$query.'%'
+                            value => '%'.$query.'%',
+                            sort  => $sort,
                            );
 
 }
@@ -109,6 +110,8 @@ sub _make_query {
   my ($self, %args) = @_;
   my $sql = $args{sql};
   my $value = $args{value};
+  my $sort = $args{sort};
+  $sort //= 'netflix';
 
   my $sth = $self->{dbh}->prepare($sql);
   $sth->execute($value)
@@ -118,15 +121,27 @@ sub _make_query {
   while (my $row = $sth->fetchrow_hashref) {
     push @movies, $self->_movie_from_data($row);
   }
-  return _sort_movies(@movies);
+  return _sort_movies($sort, @movies);
 }
 
 sub _sort_movies {
-  my ($self, @movies) = @_;
+  my ($sort, @movies) = @_;
+  my $primary;
+  my $aux;
   
-  # Sort by netflix rating first, then rt, then imdb.
+  if ($sort eq 'netflix') {
+    $primary = 1;
+    $aux = 6;
+  } elsif ($sort eq 'imdb') {
+    $primary = 3;
+    $aux = 4;
+  } else {
+    $primary = 2;
+    $aux = 5;
+  }
   return map { $_->[0] }
-         sort { $b->[1] <=> $a->[1] || $b->[3] <=> $a->[3] || $b->[2] <=> $a->[2] }
+         sort { $b->[$primary] <=> $a->[$primary] || $b->[$aux] <=> $a->[$aux] }
+         map { [$_->[0], $_->[1], $_->[2], $_->[3], $_->[1] + ($_->[2] / 20), $_->[1] + ($_->[3] / 2), ($_->[2] / 20) + ($_->[3] / 2)] } 
          map { [$_, $_->netflix_rating, $_->rt_rating, $_->imdb_rating] } @movies;
 }
 
