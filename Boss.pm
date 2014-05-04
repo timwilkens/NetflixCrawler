@@ -21,10 +21,10 @@ sub get_work {
 
   if (!$self->detail_work_left && $self->list_work_left) {
     return $self->get_list_work;
-  } elsif (((keys %{$self->{seen}}) % 10) == 0) {
-    return $self->get_list_work;
-  } else {
+  } elsif ($self->detail_work_left > 10) {
     return $self->get_detail_work;
+  } else {
+    return $self->get_list_work;
   }
 }
 
@@ -41,6 +41,7 @@ sub get_list_work {
 sub add_work {
   my ($self, $link) = @_;
   return if ($self->{seen}{$link->url});
+  return if ($self->detail_work_left > 1000); # Limit how much we work on.
 
   if ($link->type eq 'list') {
     $self->_add_list_work($link);

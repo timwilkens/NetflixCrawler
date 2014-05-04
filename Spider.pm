@@ -53,6 +53,10 @@ sub run {
                                                  content => $self->{netflix}->content,
                                                 );
       next unless $movie;
+      # Don't do imdb and RT if we already have this.
+      next if $self->{storage}->movie_id_exists($movie->netflix_id);
+      next if $self->{storage}->movie_title_exists($movie->title);
+
       $self->{imdb}->add_imdb_data($movie);
       $self->{rt}->add_tomato_rating($movie);
       $self->{storage}->store_movie($movie);
