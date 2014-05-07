@@ -45,7 +45,11 @@ sub run {
   while (my $link = $self->{boss}->get_work) {
     next if $self->{storage}->movie_url_exists($link->url);
     print "Getting: " . $link->url . "\n";
-    print "Added: $added\t" . $self->{boss}->detail_work_left . " detail links left\n";
+    print "Added: $added\t" 
+          . $self->{boss}->detail_work_left 
+          . " detail links left\t" 
+          . $self->{boss}->list_work_left
+          . " list links left\n";
     my @to_add = $self->{netflix}->get_all_links($link->url);
     $self->give_list_to_boss(@to_add);
 

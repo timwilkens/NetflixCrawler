@@ -84,10 +84,7 @@ sub get_movie_list_links {
   my @links;
   for my $link (@movie_links) {
     $link = $link->url_abs;
-      push @links, (NetflixURL->new(url => $link, type => 'list'));
-      for my $sorting ( qw(su rt yr mr za az) ) {
-        push @links, (NetflixURL->new(url => $link . "&orderBy=$sorting", type => 'list'));
-      }
+    push @links, (NetflixURL->new(url => $link, type => 'list'));
   }
 
   return @links;
