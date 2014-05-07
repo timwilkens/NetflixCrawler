@@ -21,10 +21,8 @@ sub get_work {
 
   if (!$self->detail_work_left && $self->list_work_left) {
     return $self->get_list_work;
-  } elsif ($self->detail_work_left > 10) {
-    return $self->get_detail_work;
   } else {
-    return $self->get_list_work;
+    return $self->get_detail_work;
   }
 }
 
