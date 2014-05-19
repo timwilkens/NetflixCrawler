@@ -37,8 +37,19 @@ sub add_tomato_rating {
     }
   }
 
+  my $found;
   if ($content =~ /<span\s+itemprop="ratingValue"\s+id="all-critics-meter"\s*class="meter\s+\w+\s+numeric\s+">\s*(\d+)\s*<\/span>/) {
     $movie->set_rt_rating($1);
+    $found = 1;
+  }
+
+  if (!$found) {
+    print "Looking for new match\n";
+    if ($content =~ /<span\s+class="meter\s+wts\s+numeric\s*">\s*(\d+)\s*<\/span>/s) {
+      $movie->set_rt_rating($1);
+    } elsif ($content =~ /<span\s+class="meter\s+popcorn\s+numeric\s*">\s*(\d+)\s*</s){
+      $movie->set_rt_rating($1);
+    }
   }
 }
 

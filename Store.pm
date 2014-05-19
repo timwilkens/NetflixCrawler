@@ -65,6 +65,19 @@ sub close {
   $self->{dbh}->disconnect;
 }
 
+sub update_tomato {
+  my ($self, $movie) = @_;
+  return unless ($movie->rt_rating);
+  my $sql = "UPDATE movies SET rt_rating=? WHERE netflix_id=" . $movie->netflix_id;
+  $self->{dbh}->do($sql, undef, $movie->rt_rating);
+}
+
+sub no_tomato {
+  my $self = shift;
+  my $sql = "SELECT * from movies WHERE rt_rating is NULL";
+  return $self->_make_query(sql => $sql);
+}
+
 sub movie_id_exists {
   my ($self, $netflix_id) = @_;
   return $self->{dbh}->selectrow_array('SELECT COUNT(*) FROM movies WHERE netflix_id = ?',
@@ -115,8 +128,13 @@ sub _make_query {
   $sort //= 'netflix';
 
   my $sth = $self->{dbh}->prepare($sql);
-  $sth->execute($value)
-    or die $self->{dbh}->errstr;
+  if ($value) {
+    $sth->execute($value)
+      or die $self->{dbh}->errstr;
+  } else {
+    $sth->execute()
+      or die $self->{dbh}->errstr;
+  }
 
   my @movies;
   while (my $row = $sth->fetchrow_hashref) {
