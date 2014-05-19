@@ -98,7 +98,8 @@ sub netflix_rating_above {
 sub netflix_genre_contains {
   my ($self, $query, $sort) = @_;
 
-  my $sql = "SELECT * from movies WHERE netflix_genre LIKE ?";
+  # Try to speed things up here a bit. Need netflig_genre for 'is_tv_show' method.
+  my $sql = "SELECT title, netflix_rating, imdb_rating, rt_rating, plot, url, netflix_genre from movies WHERE netflix_genre LIKE ?";
   return $self->_make_query(sql   => $sql, 
                             value => '%'.$query.'%',
                             sort  => $sort,
@@ -151,7 +152,11 @@ sub _movie_from_data {
   my $movie = Movie->new();
   for my $field ( qw(title netflix_rating netflix_id plot genre url imdb_rating year imdb_id netflix_genre rt_rating) ) {
     my $method = "set_" . $field;
-    $movie->$method($data->{$field});
+    if ($data->{$field}) {
+      $movie->$method($data->{$field});
+    } else {
+      $movie->$method(undef);
+    }
   }
   return $movie;
 }
